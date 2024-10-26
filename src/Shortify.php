@@ -25,6 +25,9 @@ class Shortify
     ) {
     }
 
+    /**
+     * Get the singleton instance
+     */
     public static function make(): Shortify
     {
         /** @var Shortify $instance */
@@ -33,16 +36,32 @@ class Shortify
         return $instance;
     }
 
+    /**
+     * Shorten the given URL.
+     *
+     * Static shortcut alias for `->shorten()`
+     */
     public static function url(string $url, ?string $code = null): ShortifyUrl
     {
         return static::make()->shorten($url, $code);
     }
 
+    /**
+     * Generate a unique code for the given URL.
+     */
     public function generateCode(string $url): string
     {
         return Str::random(ShortifyConfig::getCodeLength());
     }
 
+    /**
+     * Shorten the given URL.
+     *
+     * If a code is provided, it must be unique.
+     * If no code is proivided, a unique code will be generated.
+     *
+     * @throws ShortifyUrlCodeAlreadyExistsException if code is provided and code is non-unique
+     */
     public function shorten(string $url, ?string $code = null): ShortifyUrl
     {
         $model = ShortifyConfig::getShortUrlModel();
@@ -68,10 +87,14 @@ class Shortify
             'code' => $code,
             'original_url' => $url,
         ]);
+        $url->save();
 
         return $url;
     }
 
+    /**
+     * Check if the given code exists, used to prevent duplicate codes.
+     */
     public static function checkIfCodeExists(string $code): bool
     {
         $model = ShortifyConfig::getShortUrlModel();
@@ -79,18 +102,35 @@ class Shortify
         return $model::query()->where('code', $code)->exists();
     }
 
-    public function getRedirectResponse(ShortifyUrl $url): RedirectResponse
+    /**
+     * Get a redirect response to the original URL of the given short URL.
+     */
+    public function redirectToOriginalUrl(ShortifyUrl $url): RedirectResponse
     {
         return $this->redirector->away($url->original_url);
     }
 
-    public function getShortUrl(ShortifyUrl $url): string
+    /**
+     * Get the full shortened URL.
+     */
+    public function getShortenedUrl(ShortifyUrl $url): string
     {
-        return $this->url->route('shortify.url', [
+        return $this->url->route(static::getRouteName(), [
             'code' => $url->code,
         ]);
     }
 
+    /**
+     * Get the name of the route that will handle the redirecting logic.
+     */
+    public static function getRouteName(): string
+    {
+        return ShortifyConfig::getRoutingRoute() ?? 'shortify.url';
+    }
+
+    /**
+     * Get the authenticated user
+     */
     public function user(): ?User
     {
         $user = Auth::user();

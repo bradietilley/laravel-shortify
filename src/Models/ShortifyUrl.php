@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Shortify\Models;
 
-use BradieTilley\Shortify\Database\Factories\ShortUrlFactory;
+use BradieTilley\Shortify\Database\Factories\ShortifyUrlFactory;
 use BradieTilley\Shortify\Events\ExpiredUrlAttempted;
 use BradieTilley\Shortify\Events\InvalidUrlAttempted;
 use BradieTilley\Shortify\Events\UrlCreated;
@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @property Collection<int, ShortifyVisit> $visits
  *
- * @method static ShortUrlFactory factory(callable|array|int|null $count = null, callable|array $state = [])
+ * @method static ShortifyUrlFactory factory(callable|array|int|null $count = null, callable|array $state = [])
  */
 class ShortifyUrl extends Model
 {
@@ -77,17 +77,17 @@ class ShortifyUrl extends Model
     /**
      * Create a new factory instance for the model.
      */
-    protected static function newFactory(): ShortUrlFactory
+    protected static function newFactory(): ShortifyUrlFactory
     {
-        return new ShortUrlFactory();
+        return new ShortifyUrlFactory();
     }
 
     public static function byCode(string $code): ?ShortifyUrl
     {
         $model = ShortifyConfig::getShortUrlModel();
 
-        /** @var Builder $query */
-        $query = $model::withTrashed();
+        /** @var Builder<ShortifyUrl> $query */
+        $query = $model::withoutGlobalScopes();
 
         /** @var ?ShortifyUrl $url */
         $url = $query->where('code', $code)->first();
@@ -121,7 +121,7 @@ class ShortifyUrl extends Model
 
     public function getRedirect(): RedirectResponse
     {
-        return Shortify::make()->getRedirectResponse($this);
+        return Shortify::make()->redirectToOriginalUrl($this);
     }
 
     public static function redirectTo(string $code): RedirectResponse
@@ -148,7 +148,7 @@ class ShortifyUrl extends Model
     public function url(): Attribute
     {
         return Attribute::get(
-            fn () => Shortify::make()->getShortUrl($this),
+            fn () => Shortify::make()->getShortenedUrl($this),
         );
     }
 

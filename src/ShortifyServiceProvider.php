@@ -17,7 +17,6 @@ class ShortifyServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(ShortifyConfig::class, ShortifyConfig::class);
         $this->app->singleton(Shortify::class, Shortify::class);
     }
 }

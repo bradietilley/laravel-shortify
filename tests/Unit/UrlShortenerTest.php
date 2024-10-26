@@ -7,6 +7,7 @@ use BradieTilley\Shortify\Events\UrlDeleted;
 use BradieTilley\Shortify\Events\UrlVisited;
 use BradieTilley\Shortify\Exceptions\ShortifyExpiredException;
 use BradieTilley\Shortify\Exceptions\ShortifyNotFoundException;
+use BradieTilley\Shortify\Exceptions\ShortifyUrlCodeAlreadyExistsException;
 use BradieTilley\Shortify\Models\ShortifyUrl;
 use BradieTilley\Shortify\Shortify;
 use Illuminate\Http\RedirectResponse;
@@ -14,22 +15,38 @@ use Illuminate\Support\Facades\Event;
 use Workbench\App\Models\User;
 
 test('ShortUrl can be created for a long URL', function () {
-    $longUrl = 'https://localhost/some/page/to/something/that-is-a-wee-bit-long-innit?bruv';
+    $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
 
-    $short = Shortify::make()->shorten($longUrl);
+    $short = Shortify::url($longUrl);
 
     expect($short)->toBeInstanceOf(ShortifyUrl::class);
 
     expect($short->url)->toBe('http://localhost/s/'.$short->code);
 });
 
-test('ShortUrl can redirect to the original url', function () {
-    $url = ShortifyUrl::factory()->create();
+test('ShortUrl can be created under a specific domain', function () {
+    $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
 
-    expect($url->getRedirect()->getTargetUrl())->toBe($url->original_url);
+    $short = Shortify::url($longUrl);
+
+    expect($short)->toBeInstanceOf(ShortifyUrl::class);
+
+    // See TestCase for domain name registration
+    expect($short->url)->toBe('http://example.org/s/'.$short->code);
 });
 
-test('ShortUrl can lookup shortened url by code', function () {
+test('can shorten urls with a custom code', function () {
+    $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
+
+    $url = Shortify::url($longUrl, 'ABC123');
+    expect($url->code)->toBe('ABC123');
+
+    /** Throws an exception when duplicate is found */
+    expect(fn () => Shortify::url($longUrl, 'ABC123'))
+        ->toThrow(ShortifyUrlCodeAlreadyExistsException::class);
+});
+
+test('ShortUrl can lookup a shortened url by its code', function () {
     $url1 = ShortifyUrl::factory()->code('0000001')->createOne();
     $url2 = ShortifyUrl::factory()->code('0000002')->createOne();
     $url3 = ShortifyUrl::factory()->code('0000003')->createOne();
@@ -39,7 +56,7 @@ test('ShortUrl can lookup shortened url by code', function () {
     expect($url2->is($url4))->toBe(true);
 });
 
-test('ShortUrl can redirectTo code', function (bool $authenticated) {
+test('ShortUrl can redirect to the original URL', function (bool $authenticated) {
     Event::fake();
     $user = null;
 

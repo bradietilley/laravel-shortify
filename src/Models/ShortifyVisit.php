@@ -16,7 +16,8 @@ use Illuminate\Foundation\Auth\User;
  * @property ?string $ip
  * @property ?string $user_agent
  *
- * @property ?User $user
+ * @property-read ?User $user
+ * @property-read ShortifyUrl $url
  */
 class ShortifyVisit extends Model
 {
@@ -34,7 +35,7 @@ class ShortifyVisit extends Model
         return $this->belongsTo(ShortifyConfig::getUserModel(), 'user_id');
     }
 
-    public function shortenedUrl(): BelongsTo
+    public function url(): BelongsTo
     {
         return $this->belongsTo(ShortifyConfig::getShortUrlModel(), 'shortify_url_id');
     }

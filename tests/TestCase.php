@@ -2,9 +2,8 @@
 
 namespace Tests;
 
+use BradieTilley\Shortify\ShortifyConfig;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\ParallelTesting;
 use Illuminate\Support\Str;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
@@ -18,15 +17,19 @@ abstract class TestCase extends TestbenchTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        ShortifyConfig::clearCache();
     }
 
     public function getEnvironmentSetUp($app)
     {
-        $app['config']->set('totp.models.user', User::class);
-        $app['config']->set('shortify.models.user', User::class);
+        if (str_ends_with($this->name(), 'under_a_specific_domain')) {
+            $app['config']->set('shortify.routing.domain', 'http://example.org');
+        }
 
         $app->useStoragePath(realpath(__DIR__.'/../workbench/storage'));
-        $app['config']->set('shortify.channel.path', storage_path('logs/audit-'.ParallelTesting::token().'.log'));
+
+        $app['config']->set('shortify.models.user', User::class);
 
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
@@ -40,8 +43,6 @@ abstract class TestCase extends TestbenchTestCase
 
     protected function tearDown(): void
     {
-        File::delete(config('shortify.channel.path'));
-
         parent::tearDown();
     }
 }

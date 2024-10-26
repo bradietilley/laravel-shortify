@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\BradieTilley\Shortify\Models\ShortifyUrl>
  */
-class ShortUrlFactory extends Factory
+class ShortifyUrlFactory extends Factory
 {
     protected $model = ShortifyUrl::class;
 
