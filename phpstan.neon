@@ -2,3 +2,9 @@ parameters:
   level: max
   paths:
     - src/
+
+  ignoreErrors:
+    - '#HasFactory is not generic#'
+    - '#BelongsTo is not generic#'
+    - '#Builder is not generic#'
+    - '#HasMany is not generic#'
