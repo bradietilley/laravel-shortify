@@ -99,6 +99,7 @@ class ShortifyConfig
      */
     public static function getCodeLength(): int
     {
+        /** @phpstan-ignore-next-line */
         return static::get('routing.code_length');
     }
 }
