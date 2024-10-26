@@ -102,4 +102,12 @@ class ShortifyConfig
         /** @phpstan-ignore-next-line */
         return static::get('routing.code_length');
     }
+
+    /**
+     * Get the collation to use for the `code` field to enforce case sensitivity.
+     */
+    public static function getDatabaseCodeFieldCollation(): string
+    {
+        return static::get('database.code_field_collation');
+    }
 }

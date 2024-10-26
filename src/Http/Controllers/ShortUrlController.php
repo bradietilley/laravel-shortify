@@ -2,7 +2,7 @@
 
 namespace BradieTilley\Shortify\Http\Controllers;
 
-use BradieTilley\Shortify\Models\ShortifyUrl;
+use BradieTilley\Shortify\ShortifyConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ShortUrlController
@@ -12,6 +12,8 @@ class ShortUrlController
      */
     public function __invoke(string $code): RedirectResponse
     {
-        return ShortifyUrl::redirectTo($code);
+        $model = ShortifyConfig::getShortUrlModel();
+
+        return $model::redirectTo($code);
     }
 }

@@ -18,14 +18,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @property-read int $id
- * @property-read string $ulid
  *
  * @property string $code
  * @property string $original_url
@@ -41,7 +39,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ShortifyUrl extends Model
 {
-    use SoftDeletes;
     /** @use HasFactory<ShortifyUrlFactory> */
     use HasFactory;
 
@@ -91,17 +88,24 @@ class ShortifyUrl extends Model
         return 'code';
     }
 
+    /**
+     * @param Builder<static>
+     * @return Builder<static>
+     */
+    public function scopeByCode(Builder $query, string $code): Builder
+    {
+        $query = $query->withoutGlobalScopes();
+
+        if (DB::getDriverName() === 'mysql') {
+            return $query->whereRaw('BINARY code = ?', [ $code ]);
+        }
+
+        return $query->where('code', $code);
+    }
+
     public static function byCode(string $code): ?ShortifyUrl
     {
-        $model = ShortifyConfig::getShortUrlModel();
-
-        /** @var Builder<ShortifyUrl> $query */
-        $query = $model::query()->withoutGlobalScopes();
-
-        /** @var ?ShortifyUrl $url */
-        $url = $query->where('code', $code)->first();
-
-        return $url;
+        return static::query()->byCode($code)->first();
     }
 
     public function isExpired(): bool
@@ -164,19 +168,19 @@ class ShortifyUrl extends Model
     public function visit(): static
     {
         $user = Shortify::make()->user();
-
         /** @var Request $request */
         $request = request();
 
         $model = ShortifyConfig::getShortUrlVisitModel();
         $visit = new $model([
-            'ulid' => (string) Str::ulid(),
             'shortify_url_id' => $this->getKey(),
             'user_id' => $user?->getKey(),
             'ip' => $request->ip(),
             'user_agent' => $request->header('User-Agent'),
         ]);
         $visit->save();
+
+        $this->increment('visit_count');
 
         UrlVisited::dispatch($this, $visit);
 

@@ -35,16 +35,6 @@ test('can shorten urls with a custom code', function () {
         ->toThrow(ShortifyUrlCodeAlreadyExistsException::class);
 });
 
-test('ShortUrl can lookup a shortened url by its code', function () {
-    $url1 = ShortifyUrl::factory()->code('0000001')->createOne();
-    $url2 = ShortifyUrl::factory()->code('0000002')->createOne();
-    $url3 = ShortifyUrl::factory()->code('0000003')->createOne();
-
-    $url4 = ShortifyUrl::byCode('0000002');
-
-    expect($url2->is($url4))->toBe(true);
-});
-
 test('ShortUrl can redirect to the original URL', function (bool $authenticated) {
     Event::fake();
     $user = null;

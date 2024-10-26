@@ -84,7 +84,6 @@ class Shortify
         }
 
         $url = new $model([
-            'ulid' => (string) Str::ulid(),
             'code' => $code,
             'original_url' => $url,
         ]);

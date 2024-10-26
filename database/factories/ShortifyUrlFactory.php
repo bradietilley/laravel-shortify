@@ -18,7 +18,6 @@ class ShortifyUrlFactory extends Factory
     public function definition()
     {
         return [
-            'ulid' => (string) Str::ulid(),
             'code' => Str::random(12),
             'original_url' => 'https://localhost/long-url/'.Str::random(48),
         ];

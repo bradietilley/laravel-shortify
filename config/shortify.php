@@ -70,4 +70,11 @@ return [
          */
         'code_length' => 12,
     ],
+
+    'database' => [
+        /**
+         * The collation to use for the `code` field to enforce case sensitivity.
+         */
+        'code_field_collation' => 'ascii_bin',
+    ],
 ];

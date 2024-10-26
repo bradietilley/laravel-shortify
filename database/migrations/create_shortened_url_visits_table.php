@@ -13,7 +13,6 @@ return new class () extends Migration {
     {
         Schema::create('shortify_visits', function (Blueprint $table) {
             $table->id();
-            $table->ulid()->unique();
 
             $table->foreignIdFor(ShortifyConfig::getShortUrlModel(), 'shortify_url_id')->nullable();
             $table->foreignIdFor(ShortifyConfig::getUserModel(), 'user_id')->nullable();

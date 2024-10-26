@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\User;
 
 /**
  * @property-read int $id
- * @property-read string $ulid
  *
  * @property string $shortify_url_id
  * @property int|string|null $user_id

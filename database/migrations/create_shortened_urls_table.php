@@ -1,5 +1,6 @@
 <?php
 
+use BradieTilley\Shortify\ShortifyConfig;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,9 +13,8 @@ return new class () extends Migration {
     {
         Schema::create('shortify_urls', function (Blueprint $table) {
             $table->id();
-            $table->ulid()->unique();
 
-            $table->string('code')->index();
+            $table->string('code')->collation(ShortifyConfig::getDatabaseCodeFieldCollation())->unique();
             $table->mediumText('original_url');
 
             $table->integer('visit_count')->unsigned()->default(0);
@@ -22,7 +22,6 @@ return new class () extends Migration {
             $table->boolean('expired')->default(false)->index();
             $table->timestamp('expires_at', 3)->nullable();
 
-            $table->softDeletes('deleted_at', 3);
             $table->timestamps(3);
         });
     }
