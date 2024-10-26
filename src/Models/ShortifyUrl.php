@@ -82,6 +82,11 @@ class ShortifyUrl extends Model
         return new ShortifyUrlFactory();
     }
 
+    public function getRouteKeyName()
+    {
+        return 'code';
+    }
+
     public static function byCode(string $code): ?ShortifyUrl
     {
         $model = ShortifyConfig::getShortUrlModel();
