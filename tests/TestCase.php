@@ -36,7 +36,7 @@ abstract class TestCase extends TestbenchTestCase
         $app->useStoragePath(realpath(__DIR__.'/../workbench/storage'));
 
         $app['config']->set('shortify.models.user', User::class);
-        $app['config']->set('shortify.database.collation', 'BINARY'); // sqlite
+        $app['config']->set('shortify.database.code_field_collation', 'BINARY'); // sqlite
 
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
