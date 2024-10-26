@@ -3,6 +3,8 @@ parameters:
   paths:
     - src/
 
+  reportUnmatchedIgnoredErrors: false
+  
   ignoreErrors:
     - '#HasFactory is not generic#'
     - '#BelongsTo is not generic#'
