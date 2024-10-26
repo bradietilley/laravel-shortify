@@ -23,8 +23,12 @@ abstract class TestCase extends TestbenchTestCase
 
     public function getEnvironmentSetUp($app)
     {
-        if (str_ends_with($this->name(), 'under_a_specific_domain')) {
+        if (str_ends_with($this::class, 'CustomDomainTest')) {
             $app['config']->set('shortify.routing.domain', 'http://example.org');
+        }
+
+        if (str_ends_with($this::class, 'CustomRouteTest')) {
+            $app['config']->set('shortify.routing.route', 'custom-route-test');
         }
 
         $app->useStoragePath(realpath(__DIR__.'/../workbench/storage'));

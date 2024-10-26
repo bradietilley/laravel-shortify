@@ -1,16 +1,10 @@
 <?php
 
-use BradieTilley\Shortify\Shortify;
-use Illuminate\Http\Request;
+use BradieTilley\Shortify\Models\ShortifyUrl;
 use Illuminate\Support\Facades\Route;
 
-Route::get('example-page/{int}', function (Request $request, int $int) {
-    Shortify::log('Something happened', [
-        'int' => $int,
-    ]);
-
+Route::get('custom-route-test/{code}', function (ShortifyUrl $code) {
     return response()->json([
-        'int' => $int,
-        'name' => $request->user()?->name,
+        'redirect' => $code->visit()->original_url,
     ]);
-});
+})->name('custom-route-test');

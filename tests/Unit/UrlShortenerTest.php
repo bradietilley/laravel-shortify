@@ -24,17 +24,6 @@ test('ShortUrl can be created for a long URL', function () {
     expect($short->url)->toBe('http://localhost/s/'.$short->code);
 });
 
-test('ShortUrl can be created under a specific domain', function () {
-    $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
-
-    $short = Shortify::url($longUrl);
-
-    expect($short)->toBeInstanceOf(ShortifyUrl::class);
-
-    // See TestCase for domain name registration
-    expect($short->url)->toBe('http://example.org/s/'.$short->code);
-});
-
 test('can shorten urls with a custom code', function () {
     $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
 
