@@ -17,12 +17,14 @@ abstract class TestCase extends TestbenchTestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        ShortifyConfig::clearCache();
     }
 
     public function getEnvironmentSetUp($app)
     {
+        ShortifyConfig::clearCache();
+        $app['config']->set('shortify.routing.domain', null);
+        $app['config']->set('shortify.routing.route', null);
+
         if (str_ends_with($this::class, 'CustomDomainTest')) {
             $app['config']->set('shortify.routing.domain', 'http://example.org');
         }
