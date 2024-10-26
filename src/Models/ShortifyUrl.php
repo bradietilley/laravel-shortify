@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class ShortifyUrl extends Model
 {
     use SoftDeletes;
+    /** @use HasFactory<ShortifyUrlFactory> */
     use HasFactory;
 
     public $table = 'shortify_urls';
@@ -69,6 +70,9 @@ class ShortifyUrl extends Model
         ];
     }
 
+    /**
+     * @return HasMany<ShortifyVisit, $this>
+     */
     public function visits(): HasMany
     {
         return $this->hasMany(ShortifyConfig::getShortUrlVisitModel(), 'shortify_url_id');
@@ -92,7 +96,7 @@ class ShortifyUrl extends Model
         $model = ShortifyConfig::getShortUrlModel();
 
         /** @var Builder<ShortifyUrl> $query */
-        $query = $model::withoutGlobalScopes();
+        $query = $model::query()->withoutGlobalScopes();
 
         /** @var ?ShortifyUrl $url */
         $url = $query->where('code', $code)->first();

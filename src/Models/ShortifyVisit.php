@@ -30,11 +30,17 @@ class ShortifyVisit extends Model
     public $hidden = [
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(ShortifyConfig::getUserModel(), 'user_id');
     }
 
+    /**
+     * @return BelongsTo<ShortifyUrl, $this>
+     */
     public function url(): BelongsTo
     {
         return $this->belongsTo(ShortifyConfig::getShortUrlModel(), 'shortify_url_id');
