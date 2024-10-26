@@ -12,12 +12,12 @@ abstract class ShortifyException extends Exception
         return new ShortifyUrlCodeAlreadyExistsException($code);
     }
 
-    public static function notFound(string $url): static
+    public static function notFound(string $url): ShortifyNotFoundException
     {
         return new ShortifyNotFoundException($url);
     }
 
-    public static function expired(ShortifyUrl $url): static
+    public static function expired(ShortifyUrl $url): ShortifyExpiredException
     {
         return new ShortifyExpiredException($url);
     }
