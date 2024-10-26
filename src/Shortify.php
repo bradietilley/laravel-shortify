@@ -3,6 +3,7 @@
 namespace BradieTilley\Shortify;
 
 use BradieTilley\Shortify\Exceptions\ShortifyException;
+use BradieTilley\Shortify\Exceptions\ShortifyUrlCodeAlreadyExistsException;
 use BradieTilley\Shortify\Models\ShortifyUrl;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Foundation\Auth\User;
