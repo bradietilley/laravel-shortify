@@ -11,3 +11,4 @@ parameters:
     - '#Builder is not generic#'
     - '#HasMany is not generic#'
     - '#should return Illuminate\\Database\\Eloquent\\Builder<.+> but returns Illuminate\\Database\\Query\\Builder#'
+    - '#Method BradieTilley\\Shortify\\ShortifyConfig::.+ should return .+ but returns mixed#'

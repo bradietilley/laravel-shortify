@@ -28,7 +28,6 @@ class ShortifyConfig
      */
     public static function getUserModel(): string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('models.user', User::class);
     }
 
@@ -39,7 +38,6 @@ class ShortifyConfig
      */
     public static function getShortUrlModel(): string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('models.shortify_url', ShortifyUrl::class);
     }
 
@@ -50,7 +48,6 @@ class ShortifyConfig
      */
     public static function getShortUrlVisitModel(): string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('models.shortify_visit', ShortifyVisit::class);
     }
 
@@ -61,7 +58,6 @@ class ShortifyConfig
      */
     public static function getRoutingUri(): string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('routing.uri');
     }
 
@@ -71,7 +67,6 @@ class ShortifyConfig
      */
     public static function getRoutingDomain(): ?string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('routing.domain');
     }
 
@@ -89,7 +84,6 @@ class ShortifyConfig
      */
     public static function getRoutingRoute(): ?string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('routing.route');
     }
 
@@ -99,7 +93,6 @@ class ShortifyConfig
      */
     public static function getCodeLength(): int
     {
-        /** @phpstan-ignore-next-line */
         return static::get('routing.code_length');
     }
 
@@ -108,7 +101,6 @@ class ShortifyConfig
      */
     public static function getDatabaseCodeFieldCollation(): string
     {
-        /** @phpstan-ignore-next-line */
         return static::get('database.code_field_collation');
     }
 
