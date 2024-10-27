@@ -141,7 +141,6 @@ class ShortifyUrl extends Model
     public static function redirectTo(string $code): RedirectResponse
     {
         $url = static::findByCode($code);
-
         $user = Shortify::make()->user();
 
         if ($url === null) {
@@ -156,7 +155,11 @@ class ShortifyUrl extends Model
             throw ShortifyException::expired($url);
         }
 
-        return $url->visit()->getRedirect();
+        if (ShortifyConfig::getFeatureTrackVisits() === false) {
+            $url->visit();
+        }
+
+        return $url->getRedirect();
     }
 
     public function url(): Attribute

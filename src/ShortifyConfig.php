@@ -111,4 +111,12 @@ class ShortifyConfig
         /** @phpstan-ignore-next-line */
         return static::get('database.code_field_collation');
     }
+
+    /**
+     * Get whether or not to track visits automatically
+     */
+    public static function getFeatureTrackVisits(): bool
+    {
+        return static::get('features.track_visits', true);
+    }
 }

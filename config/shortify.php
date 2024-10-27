@@ -77,4 +77,13 @@ return [
          */
         'code_field_collation' => 'ascii_bin',
     ],
+
+    'feature' => [
+        /**
+         * Whether or not to track visits automatically
+         *
+         * @var bool
+         */
+        'track_visits' => true,
+    ],
 ];

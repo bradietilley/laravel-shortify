@@ -147,6 +147,12 @@ As always with most Laravel packages, you can modify the models to use -- perhap
 
 This can be configured via the `shortify.models.shortify_url` and `shortify.models.shortify_visit` config variables which change the `ShortifyUrl` and `ShortifyVisit` models respectively.
 
+### Customisation → Turn off visitor tracking
+
+Maybe you don't want tracking, or don't need it. Whatever the reasons are, you can disable the tracking of visits setting the `shortify.feature.track_visits` config variable to `false`.
+
+This will prevent the `shortify_urls.visit_count` field from incrementing and will prevent the `shortify_visits` table from being populated.
+
 ### Customisation → Everything else
 
 The `BradieTilley\Shortify\Shortify` singleton can be replaced by another Shortify instance within your service provider. For example:

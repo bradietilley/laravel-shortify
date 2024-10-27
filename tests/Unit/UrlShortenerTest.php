@@ -66,6 +66,22 @@ test('ShortUrl can redirect to the original URL', function (bool $authenticated)
     'guest' => false,
 ]);
 
+test('Visits will not be tracked if feature disabled', function () {
+    $user = null;
+
+    config([
+        'shortify.feature.track_visits' => false,
+    ]);
+
+    $url = ShortifyUrl::factory()->code('0000002')->original('https://example.org/random/fc21f21f-b822-5fd7-8824-e986e54a5d5f')->createOne();
+    $response = ShortifyUrl::redirectTo('0000002');
+    expect($url->visits()->count())->toBe(0);
+    expect($url->refresh()->visit_count)->toBe(0);
+
+    expect($response)->toBeInstanceOf(RedirectResponse::class);
+    expect($response->getTargetUrl())->toBe('https://example.org/random/fc21f21f-b822-5fd7-8824-e986e54a5d5f');
+});
+
 test('ShortUrl will fire events when url is invalid', function () {
     Event::fake();
 
