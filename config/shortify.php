@@ -78,7 +78,7 @@ return [
         'code_field_collation' => 'ascii_bin',
     ],
 
-    'feature' => [
+    'features' => [
         /**
          * Whether or not to track visits automatically
          *

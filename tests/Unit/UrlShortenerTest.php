@@ -10,6 +10,7 @@ use BradieTilley\Shortify\Exceptions\ShortifyNotFoundException;
 use BradieTilley\Shortify\Exceptions\ShortifyUrlCodeAlreadyExistsException;
 use BradieTilley\Shortify\Models\ShortifyUrl;
 use BradieTilley\Shortify\Shortify;
+use BradieTilley\Shortify\ShortifyConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
 use Workbench\App\Models\User;
@@ -70,8 +71,9 @@ test('Visits will not be tracked if feature disabled', function () {
     $user = null;
 
     config([
-        'shortify.feature.track_visits' => false,
+        'shortify.features.track_visits' => false,
     ]);
+    ShortifyConfig::clearCache();
 
     $url = ShortifyUrl::factory()->code('0000002')->original('https://example.org/random/fc21f21f-b822-5fd7-8824-e986e54a5d5f')->createOne();
     $response = ShortifyUrl::redirectTo('0000002');
