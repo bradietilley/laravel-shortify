@@ -15,7 +15,7 @@ return new class () extends Migration {
             $table->id();
 
             $table->string('code')->collation(ShortifyConfig::getDatabaseCodeFieldCollation())->unique();
-            $table->mediumText('original_url');
+            $table->text('original_url');
 
             $table->integer('visit_count')->unsigned()->default(0);
 
