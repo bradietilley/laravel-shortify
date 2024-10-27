@@ -155,7 +155,7 @@ class ShortifyUrl extends Model
             throw ShortifyException::expired($url);
         }
 
-        if (ShortifyConfig::getFeatureTrackVisits() === false) {
+        if (ShortifyConfig::getFeatureTrackVisits()) {
             $url->visit();
         }
 
