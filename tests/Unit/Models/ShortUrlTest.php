@@ -48,4 +48,7 @@ test('ShortUrl can lookup a shortened url by its code in a case sensitive manner
     $query = ShortifyUrl::query()->byCode('wrcvR9Ba');
     $sql = str_replace('?', implode('', $query->getBindings()), $query->toSql());
     expect($sql)->toBe('select * from `shortify_urls` where BINARY code = wrcvR9Ba');
+
+    // Restore original
+    Config::set('database.default', 'testbench');
 });
