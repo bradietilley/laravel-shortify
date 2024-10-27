@@ -2,6 +2,8 @@
 
 use BradieTilley\Shortify\Models\ShortifyUrl;
 use BradieTilley\Shortify\Models\ShortifyVisit;
+use BradieTilley\Shortify\Shortify;
+use Carbon\Carbon;
 use Workbench\App\Models\User;
 
 test('Short Url endpoint returns redirect to original url', function () {
@@ -49,3 +51,15 @@ test('Short Url endpoint tracks visits', function (bool $authenticated) {
     'authenticated' => true,
     'unauthenticated' => false,
 ]);
+
+test('can shorten urls with an expiry', function () {
+    $longUrl = 'https://localhost/some/page/to/something/far-too-long-for-sms-as-that-will-cost-more-credits';
+
+    $url = Shortify::url($longUrl, expiry: $expiry = now()->addMinute());
+    expect($url->expires_at?->isSameSecond($expiry))->toBeTrue();
+    expect($url->expireIfExpired()->expired)->toBeFalse();
+
+    Carbon::setTestNow(now()->addSeconds(61));
+
+    expect($url->expireIfExpired()->expired)->toBeTrue();
+});

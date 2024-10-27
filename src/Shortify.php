@@ -5,6 +5,7 @@ namespace BradieTilley\Shortify;
 use BradieTilley\Shortify\Exceptions\ShortifyException;
 use BradieTilley\Shortify\Exceptions\ShortifyUrlCodeAlreadyExistsException;
 use BradieTilley\Shortify\Models\ShortifyUrl;
+use DateTimeInterface;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\RedirectResponse;
@@ -41,16 +42,18 @@ class Shortify
      * Shorten the given URL.
      *
      * Static shortcut alias for `->shorten()`
+     *
+     * @param array<string, mixed> $attributes
      */
-    public static function url(string $url, ?string $code = null): ShortifyUrl
+    public static function url(string $url, ?string $code = null, ?DateTimeInterface $expiry = null, array $attributes = []): ShortifyUrl
     {
-        return static::make()->shorten($url, $code);
+        return static::make()->shorten($url, $code, $expiry, $attributes);
     }
 
     /**
      * Generate a unique code for the given URL.
      */
-    public function generateCode(string $url): string
+    public function generateCode(ShortifyUrl $url): string
     {
         return Str::random(ShortifyConfig::getCodeLength());
     }
@@ -61,11 +64,18 @@ class Shortify
      * If a code is provided, it must be unique.
      * If no code is proivided, a unique code will be generated.
      *
+     * @param array<string, mixed> $attributes
      * @throws ShortifyUrlCodeAlreadyExistsException if code is provided and code is non-unique
      */
-    public function shorten(string $url, ?string $code = null): ShortifyUrl
+    public function shorten(string $url, ?string $code = null, ?DateTimeInterface $expiry = null, array $attributes = []): ShortifyUrl
     {
+        $attributes['expires_at'] = $expiry;
+        $attributes['original_url'] = $url;
+        $attributes['code'] = $code;
+
         $model = ShortifyConfig::getShortUrlModel();
+
+        $url = new $model($attributes);
 
         if ($code !== null) {
             if (static::checkIfCodeExists($code)) {
@@ -83,10 +93,10 @@ class Shortify
             }
         }
 
-        $url = new $model([
+        $url->fill([
             'code' => $code,
-            'original_url' => $url,
         ]);
+
         $url->save();
 
         return $url;

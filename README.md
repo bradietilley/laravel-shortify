@@ -28,7 +28,7 @@ artisan vendor:publish --tag="shortify-migrations"
 
 ## Documentation
 
-### Shortening URLs
+### Shortening URLs → Basic usage
 
 **Statically:**
 
@@ -50,6 +50,17 @@ public function handle(Shortify $shortify): void
 
     echo $url->url; // https://app.com/s/xpLurjDkBATw
 }
+```
+
+### Shortening URLs → Shortening with an expiry
+
+Sometimes your short URLs should be temporary. To achieve this, provide an expiry when shortening.
+
+Viewing an expired URL will result in a `BradieTilley\Shortify\Exceptions\ShortifyExpiredException` exception.
+
+```php
+$shortUrl = Shortify::make()->shorten($longUrl, expiry: now()->addDay());
+$shortUrl = Shortify::url($longUrl, expiry: now()->addDay());
 ```
 
 ### URLs → `ShortifyUrl` Model
@@ -164,7 +175,7 @@ namespace App\Support;
 
 class Shortify extends \BradieTilley\Shortify\Shortify
 {
-    public function generateCode(string $url): string
+    public function generateCode(ShortifyUrl $url): string
     {
         return Carbon::now()->format('Ymd').'-'.Str::random(6);
     }
