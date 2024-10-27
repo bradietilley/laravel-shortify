@@ -52,7 +52,7 @@ public function handle(Shortify $shortify): void
 }
 ```
 
-### `ShortifyUrl` Model
+### URLs → `ShortifyUrl` Model
 
 The `BradieTilley\Shortify\Models\ShortifyUrl` model is the map between an original URL and a short URL (unique by code).
 
@@ -74,9 +74,44 @@ $url = Shortify::url($longUrl);
 $url->url; // https://app.com/s/xpLurjDkBATw
 ```
 
-### `ShortifyVisit` Model
+The `ShortifyUrl` model overview:
+
+- Fields:
+ - `id` → auto incrementing ID
+ - `code` → Unique URL slug/code
+ - `original_url` → The original URL (text length of 64 KB)
+ - `visit_count` → A running count of how many times this URL has been visited, for optimised querying (albeit, at the cost of continually updating this field)
+ - `expired` → Whether or not this URL has expired
+ - `expires_at` → Timestamp of when this URL expires
+ - `created_at` → Timestamp of when this URL was created
+ - `updated_at` → Timestamp of when this URL was updated (which will typically correspond to when it was last visited)
+- Attributes:
+  - `url` → A computed shortened URL using the code and the current route configuration.
+- Relations:
+  - `visits` → Has many `ShortifyVisit` models.
+
+### Visits ->`ShortifyVisit` Model
 
 The `BradieTilley\Shortify\Models\ShortifyVisit` model represents a unique visit of a shortened url, tracking the user (if authenticated), IP address, and User Agent.
+
+```php
+$url = ShortifyUrl::findByCode('my-short-url');
+
+$url->visits; // Collection<ShortifyVisit>
+```
+
+The `ShortifyVisit` model overview:
+
+- Fields:
+  - `id` → auto incrementing ID
+  - `shortify_url_id` → Foreign Key for `ShortifyUrl`
+  - `user_id` → Foreign Key for the visited `User`
+  - `ip` → IP Address of visitor
+  - `user_agent` → User Agent of visitor
+  - `created_at` → Timestamp of when the user visited the URL
+- Relations:
+  - `user` → The `User` who visited the URL
+  - `url` → The `ShortifyUrl` visited
 
 ### Customisation → Code Length
 
