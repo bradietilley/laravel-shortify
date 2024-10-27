@@ -10,3 +10,4 @@ parameters:
     - '#BelongsTo is not generic#'
     - '#Builder is not generic#'
     - '#HasMany is not generic#'
+    - '#should return Illuminate\\Database\\Eloquent\\Builder<.+> but returns Illuminate\\Database\\Query\\Builder#'

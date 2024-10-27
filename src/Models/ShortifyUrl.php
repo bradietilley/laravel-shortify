@@ -89,7 +89,7 @@ class ShortifyUrl extends Model
     }
 
     /**
-     * @param Builder<static>
+     * @param Builder<static> $query
      * @return Builder<static>
      */
     public function scopeByCode(Builder $query, string $code): Builder
@@ -103,8 +103,9 @@ class ShortifyUrl extends Model
         return $query->where('code', $code);
     }
 
-    public static function byCode(string $code): ?ShortifyUrl
+    public static function findByCode(string $code): ?ShortifyUrl
     {
+        /** @phpstan-ignore-next-line */
         return static::query()->byCode($code)->first();
     }
 
@@ -139,7 +140,7 @@ class ShortifyUrl extends Model
 
     public static function redirectTo(string $code): RedirectResponse
     {
-        $url = static::byCode($code);
+        $url = static::findByCode($code);
 
         $user = Shortify::make()->user();
 

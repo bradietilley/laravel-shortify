@@ -108,6 +108,7 @@ class ShortifyConfig
      */
     public static function getDatabaseCodeFieldCollation(): string
     {
+        /** @phpstan-ignore-next-line */
         return static::get('database.code_field_collation');
     }
 }

@@ -8,7 +8,7 @@ test('ShortUrl can lookup a shortened url by its code', function () {
     $url2 = ShortifyUrl::factory()->code('0000002')->createOne();
     $url3 = ShortifyUrl::factory()->code('0000003')->createOne();
 
-    $url4 = ShortifyUrl::byCode('0000002');
+    $url4 = ShortifyUrl::findByCode('0000002');
 
     expect($url2->is($url4))->toBe(true);
 });
@@ -18,13 +18,13 @@ test('ShortUrl can lookup a shortened url by its code in a case sensitive manner
     $url2 = ShortifyUrl::factory()->code('fSiqaL6O')->createOne();
     $url3 = ShortifyUrl::factory()->code('wrcvR9Ba')->createOne();
 
-    $url4 = ShortifyUrl::byCode('wrcvR9BA');
+    $url4 = ShortifyUrl::findByCode('wrcvR9BA');
     expect($url4)->toBeNull();
 
-    $url4 = ShortifyUrl::byCode('WrcvR9Ba');
+    $url4 = ShortifyUrl::findByCode('WrcvR9Ba');
     expect($url4)->toBeNull();
 
-    $url4 = ShortifyUrl::byCode('wrcvR9Ba');
+    $url4 = ShortifyUrl::findByCode('wrcvR9Ba');
     expect($url4)->toBeInstanceOf(ShortifyUrl::class)->is($url3)->toBeTrue();
 });
 
